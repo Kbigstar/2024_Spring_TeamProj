@@ -1,4 +1,4 @@
-## 2024_Spring_TeamProj
+## 대전 광역시 아파트 전력량 비교분석 웹페이지
 
 - **Front-End**: HTML, CSS, JavaScript, jQuery
 - **Back-End**: Spring, Flask
