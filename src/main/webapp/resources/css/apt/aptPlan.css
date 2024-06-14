@@ -1,0 +1,39 @@
+body.apt-plan{
+	padding-top: 90px;
+}
+
+.card-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.card {
+	flex: 1;
+	/* 카드의 높이를 동등하게 분배 */
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox - 숫자 입력 필드에서 스핀 버튼 제거 */
+input[type=number] {
+	appearance: none;
+	-moz-appearance: textfield;
+}
+
+/* 체크박스 기본 상태는 흰색 배경 */
+.form-check-input {
+	background-color: white;
+	/* 체크 안 됐을 때 흰색 */
+	border: 1px solid black;
+}
+
+/* 체크박스가 선택되었을 때만 초록색으로 변경 */
+.form-check-input:checked {
+	background-color: green !important;
+	/* 체크 됐을 때 초록색 */
+}

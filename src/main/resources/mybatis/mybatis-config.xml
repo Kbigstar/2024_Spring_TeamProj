@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+	  <!-- Oracle 테이블의 컬럼이 mem_id 이고, DTO의 필드변수가 memId 일때 매칭이 가능하게 하는 옵션 -->
+	  <setting name="mapUnderscoreToCamelCase" value="true"/> 
+	  <setting name="logImpl" value="STDOUT_LOGGING"/>
+		<setting name="jdbcTypeForNull" value="NULL"></setting>
+	</settings>
+	<!-- mapper vo 매핑 -->
+	<typeAliases>
+		 <typeAlias type="com.ecoplanner.my.member.vo.MemberVO" alias="MemberVO"></typeAlias> 		 
+		 <typeAlias type="com.ecoplanner.my.apt.vo.AptVO" alias="AptVO"></typeAlias>
+		 <typeAlias type="com.ecoplanner.my.board.vo.BoardVO" alias="BoardVO"></typeAlias> 
+		 <typeAlias type="com.ecoplanner.my.news.vo.NewsVO" alias="NewsVO"></typeAlias>
+		 <typeAlias type="com.ecoplanner.my.news.vo.NewsSearchVO" alias="NewsSearchVO"></typeAlias>
+		 <typeAlias type="com.ecoplanner.my.board.vo.CommentVO" alias="CommentVO"></typeAlias>
+		 <typeAlias type="com.ecoplanner.my.board.vo.CoCommentVO" alias="CoCommentVO"></typeAlias>
+	</typeAliases>
+</configuration>

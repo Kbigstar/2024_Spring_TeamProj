@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecoplanner.my.apt.dao.IAptDAO">
+	<select id="getAptNeighborhood" parameterType="AptVO"
+		resultType="AptVO">
+		SELECT a.apart_neighborhood, SUM(e.elec_usage) AS
+		total_elec_usage
+		FROM apartment a
+		JOIN tmp2 e ON a.apart_complexcode =
+		e.complexcode
+		WHERE a.apart_district = #{apartDistrict} AND e.ener_dt
+		BETWEEN '202301' AND '202312'
+		GROUP BY a.apart_neighborhood
+	</select>
+	<select id="onechoice" resultType="AptVO">
+		select distinct apart_district
+		from apartment
+	</select>
+
+	<select id="twochoice" resultType="AptVO" parameterType="AptVO">
+
+		select distinct apart_neighborhood
+		from apartment
+		where apart_district = #{apartDistrict}
+
+	</select>
+
+	<select id="threechoice" resultType="AptVO"
+		parameterType="AptVO">
+		SELECT DISTINCT APART_BUILDINGNM, APART_COMPLEXCODE
+		FROM APARTMENT A
+		INNER JOIN TMP2 T ON A.APART_COMPLEXCODE = T.COMPLEXCODE
+		WHERE A.APART_NEIGHBORHOOD = #{apartNeighborhood}
+	</select>
+
+	<select id="getAptSumElecUsage" resultType="AptVO">
+		SELECT ener_dt,
+		SUM(elec_usage) AS elec_usage
+		FROM tmp2
+		WHERE ener_dt >= '202301'
+		GROUP BY ener_dt
+		ORDER BY ener_dt
+	</select>
+
+	<select id="getBill" parameterType="AptVO" resultType="AptVO">
+		SELECT
+		total_bill_amount
+		FROM elec_other
+		WHERE elec_useage = #{elecUseage}
+	</select>
+
+	<select id="getSummerBill" parameterType="AptVO"
+		resultType="AptVO">
+		SELECT total_bill_amount
+		FROM elec_summer
+		WHERE elec_useage = #{elecUseage}
+	</select>
+
+	<select id="compareApt" parameterType="AptVO" resultType="AptVO">
+		SELECT AVG(ELEC_USAGE) as elec_usage
+		FROM tmp2
+		WHERE complexcode = #{apartComplexcode}
+		AND ENER_DT LIKE '2023%'
+	</select>
+
+	
+	<update id="updateElecUsage" parameterType="AptVO">
+		UPDATE member
+		SET elec_usage = #{elecUsage}
+		WHERE mem_id = #{memId}
+	</update>
+	
+	<select id="myapt" parameterType="AptVO" resultType="AptVO">
+		WITH avg_elec_usage AS (
+		    SELECT a.apart_buildingnm, 
+		           AVG(e.elec_usage) AS all_elec_usage,
+		           SUBSTR(e.ener_dt, 1, 6) AS month_year
+		    FROM apartment a
+		    JOIN tmp2 e ON a.apart_complexcode = e.complexcode
+		    WHERE a.apart_complexcode = #{apartComplexcode}
+		      AND SUBSTR(e.ener_dt, 1, 4) = #{enerDt} 
+		    GROUP BY a.apart_buildingnm, SUBSTR(e.ener_dt, 1, 6)
+		),
+		sum_households AS (
+		    SELECT apart_complexcode, 
+		           SUM(size_householdsno) AS sum_households
+		    FROM apt_size
+		    WHERE apart_complexcode = #{apartComplexcode}
+		    GROUP BY apart_complexcode
+		),
+		elec_usage_calc AS (
+		    SELECT ae.apart_buildingnm, 
+		           ae.all_elec_usage, 
+		           sh.sum_households, 
+		           ROUND(ae.all_elec_usage / sh.sum_households, 0) AS elec_usage,
+		           ae.month_year
+		    FROM avg_elec_usage ae
+		    JOIN sum_households sh ON sh.apart_complexcode = #{apartComplexcode}
+		)
+		SELECT euc.apart_buildingnm, 
+		       euc.all_elec_usage, 
+		       euc.sum_households, 
+		       euc.elec_usage, 
+		       euc.month_year,
+		       CASE 
+		           WHEN TO_CHAR(TO_DATE(euc.month_year, 'YYYYMM'), 'MM') IN ('07', '08') THEN es.total_bill_amount
+		           ELSE eo.total_bill_amount
+		       END AS total_bill_amount
+		FROM elec_usage_calc euc
+		LEFT JOIN elec_summer es 
+		       ON es.elec_useage = euc.elec_usage 
+		       AND TO_CHAR(TO_DATE(euc.month_year, 'YYYYMM'), 'MM') IN ('07', '08')
+		LEFT JOIN elec_other eo 
+		       ON eo.elec_useage = euc.elec_usage 
+		       AND TO_CHAR(TO_DATE(euc.month_year, 'YYYYMM'), 'MM') NOT IN ('07', '08')
+		ORDER BY euc.month_year
+	</select>
+	
+	
+    
+    <select id="getAptElecUsage" parameterType="com.ecoplanner.my.apt.vo.AptVO" resultType="com.ecoplanner.my.apt.vo.AptVO">
+        WITH avg_elec_usage AS (
+            SELECT a.apart_buildingnm, 
+                   AVG(e.elec_usage) AS all_elec_usage
+            FROM apartment a
+            JOIN tmp2 e ON a.apart_complexcode = e.complexcode
+            WHERE a.apart_complexcode = #{apartComplexcode, jdbcType=VARCHAR}
+              AND SUBSTR(e.ener_dt, 5, 2) = TO_CHAR(SYSDATE, 'MM')
+            GROUP BY a.apart_buildingnm
+        ),
+        sum_households AS (
+            SELECT apart_complexcode, 
+                   SUM(size_householdsno) AS sum_households
+            FROM apt_size
+            WHERE apart_complexcode = #{apartComplexcode, jdbcType=VARCHAR}
+            GROUP BY apart_complexcode
+        ),
+        elec_usage_calc AS (
+            SELECT ae.apart_buildingnm, 
+                   ae.all_elec_usage, 
+                   sh.sum_households, 
+                   ROUND(ae.all_elec_usage / sh.sum_households, 0) AS elec_usage
+            FROM avg_elec_usage ae
+            JOIN sum_households sh ON sh.apart_complexcode = #{apartComplexcode, jdbcType=VARCHAR}
+        )
+        SELECT euc.apart_buildingnm, 
+               euc.elec_usage, 
+               COALESCE(es.total_bill_amount, eo.total_bill_amount) AS total_bill_amount
+        FROM elec_usage_calc euc
+        LEFT JOIN elec_summer es 
+               ON es.elec_useage = euc.elec_usage AND TO_CHAR(SYSDATE, 'MM') IN ('07', '08')
+        LEFT JOIN elec_other eo 
+               ON eo.elec_useage = euc.elec_usage AND TO_CHAR(SYSDATE, 'MM') NOT IN ('07', '08')
+    </select>
+
+</mapper>

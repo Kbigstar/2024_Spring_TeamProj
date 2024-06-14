@@ -1,0 +1,190 @@
+body {
+    padding-top: 100px; /* 네비게이션 바의 높이와 조금 더 추가된 공간을 고려 */
+    background-color: red;
+}
+
+.point_text {
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 3rem;
+}
+
+.text1 {
+    font-size: 1.5rem;
+}
+
+.incentive-wrap {
+    width: 100%;
+    height: auto;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.incentive-wrap .pr-info {
+    margin: 10px 0px 0px 0px;
+}
+
+.incentive-wrap table {}
+
+.incentive-wrap table tbody th {}
+
+.incentive-wrap table tbody td {
+    padding: 10px 20px;
+}
+
+.incentive-wrap .hyphen {
+    background: url("../images/common/hyphen.png") no-repeat left 5px;
+    background-size: 7px auto;
+    text-align: left;
+    padding-left: 15px;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 28px;
+}
+
+.reference-txt {
+    text-align: right;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 48px;
+}
+
+.reference-txt .link {
+    color: #0099ec;
+    text-decoration: underline;
+}
+
+.incentive-type {
+    width: 100%;
+    height: auto;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.incentive-type .incentive-tit {
+    background: url("../images/common/dot_blue10.png") no-repeat left 9px;
+    text-align: left;
+    padding-left: 20px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 32px;
+    margin-bottom: 10px;
+    color: #009933;
+}
+
+.incentive-type ul {}
+
+.incentive-type ul::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.incentive-type ul li {
+    width: 100%;
+    height: auto;
+    margin-bottom: 18px;
+}
+
+.incentive-type ul li::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.incentive-type ul li:last-child {
+    margin-bottom: 0px;
+}
+
+.incentive-type ul li img {
+    float: left;
+    width: 70px;
+    margin-right: 20px;
+}
+
+.incentive-type ul li p {
+    float: left;
+    width: 90%;
+    height: auto;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 26px;
+    color: #000;
+}
+
+.incentive-type ul li p.bold {
+    font-weight: 500;
+    margin-bottom: 0px;
+    font-size: 15px;
+}
+
+.incentive-type ul li p.light {
+    font-weight: 400;
+}
+
+.incentive-type ul li p .link {
+    color: #0099ec;
+    text-decoration: underline;
+}
+
+.incentive-type ul.col-1-list li {
+    width: 100%;
+}
+
+.incentive-type ul.col-4-list li {
+    width: 30% !important;
+    float: left;
+}
+
+.incentive-type ul.col-4-list li p {
+    width: 50%;
+}
+
+.no_dot {
+    list-style-type: none;
+}
+
+.item {
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+}
+
+.item img {
+    width: 70px;
+    margin-right: 20px; /* 이미지와 텍스트 사이 간격 조절 */
+}
+
+.text {
+    width: calc(100% - 90px); /* 이미지 너비와 간격 만큼 텍스트 너비 지정 */
+}
+
+@media screen and (min-width: 1025px) {
+    .bg-box {
+        margin: 35px 0px 45px 0px;
+        padding: 20px 0px;
+        width: 100%;
+        height: 125px;
+        position: relative;
+        background: url(/assets/img/layout.png) no-repeat center top;
+    }
+
+    .bg-box p {
+        text-align: center;
+        font-size: 30px;
+        font-weight: 400;
+        line-height: 40px;
+        color: #fff;
+    }
+
+    .bg-box p span {
+        color: #ffff00;
+    }
+
+    .bottom-img {
+        width: 314px;
+        position: absolute;
+        right: 600px;
+        bottom: -950px;
+    }
+}

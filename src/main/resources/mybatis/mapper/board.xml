@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecoplanner.my.board.dao.BoardDAO">
+	<resultMap id="commentResultMap" type="CommentVO">
+        <id property="commentId" column="board_comment_id"/>
+        <result property="boardId" column="board_id"/>
+        <result property="content" column="content"/>
+        <result property="userId" column="user_id"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="parentCommentId" column="parent_comment_id"/>
+        <collection property="cocomentList" ofType="CoCommentVO">
+            <id property="commentId" column="co_comment_id"/>
+            <result property="parentCommentId" column="co_parent_comment_id"/>
+            <result property="content" column="co_content"/>
+            <result property="userId" column="co_user_id"/>
+            <result property="createdAt" column="co_created_at"/>
+        </collection>
+    </resultMap>
+    
+	<select id="selectBoardList" parameterType="hashmap" resultType="BoardVO">
+	select A.*
+	from
+    (select row_number() over(order by 
+     <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(sort)" >
+             <choose>
+                <when test='sort=="lastest"'>
+                     b.created_at desc
+                </when>
+                <when test='sort=="views"'>
+                     b.view_count desc
+                </when>
+             </choose>
+     </if>
+     <if test="sort == null">
+        b.created_at desc
+     </if>
+    ) as dataId,
+    		b.board_id as boardContentId,
+    		b.board_id,
+            b.board_master_id,
+            b.board_content_id,
+            b.user_id,
+            b.title,
+            b.content,
+            b.view_count,
+            b.created_at,
+            (select count(board_like_id) from board_like where board_id = b.board_id) as boardLikeCount,
+            bc.category_name,
+            ap.apart_complexcode
+            
+     from board b
+              join board_master bm
+                   on bm.board_master_id = b.board_master_id
+              join board_category bc
+                   on bc.category_id = bm.category_id
+              join member m
+                   on m.mem_id = b.user_id
+              join apartment ap
+                   on ap.apart_complexcode = m.apart_complexcode
+    where 1 = 1               
+    	<if test="boardMasterId != null" >
+       		 and b.board_master_id = #{boardMasterId}
+       </if>
+    ) A
+     where A.apart_complexcode = #{apartCode}
+     <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)" >
+        and A.title LIKE '%'||#{searchWord}||'%'
+     </if>
+     offset #{offset} rows fetch next #{size} rows only
+
+	</select>
+	
+	<select id="selectBoardDetail" parameterType="int" resultType="BoardVO">
+   	select a.*,b.*,c.*,(select count(board_like_id) from board_like where board_id = a.board_id) as boardLikeCount
+	from board a 
+	left join board_master b on a.board_master_id = b.board_master_id
+	left join board_category c on b.category_id = c.category_id
+	where a.board_id = #{boardId}
+	</select>
+	
+	<update id="updateBoardViewCount" parameterType="hashMap">
+	update board set view_count = view_count+1 where board_id = #{boardId}
+	</update>
+	
+	<insert id="insertBoardPost" parameterType="BoardVO">
+   	insert into board(
+   		board_master_id,
+  	 	board_content_id,
+   		user_id,
+   		view_count,
+   		title,
+  	 	content,
+   		created_at,
+  	 	updated_at)
+   	values(
+  	 	#{boardMasterId},
+   		(select nvl(max(board_content_id),0)+1 
+   		   from board 
+   		  where board_master_id = #{boardMasterId}
+   	    ),
+   		#{userId},
+   		0,
+   		#{title},
+   		#{content},
+   		SYSDATE,
+   		null
+   	)
+	</insert>
+	
+	<select id="selectBoardLike" parameterType="hashMap" resultType="int">
+		select count(*)
+		from board_like
+		where board_id = #{boardId}
+		and user_id = #{userId}
+	</select>
+	
+	<select id="selectBoardLikeCount" parameterType="int" resultType="int">
+		select count(*)
+		from board_like
+		where board_id = #{boardId}
+	</select>
+	
+	<update id="insertBoardLike" parameterType="hashMap">
+		insert into board_like(
+		board_id, user_id, created_at
+		)
+		values(
+		#{boardId}
+		,#{userId}
+		,SYSDATE
+		)
+	</update>
+	<select id="selectCommentList" resultMap="commentResultMap" parameterType="int">
+		select a.*, a.comment_id as board_comment_id,
+		 b.comment_id as co_comment_id, 
+		 b.content as co_content,
+		 b.parent_comment_id as co_parent_comment_id,
+		 b.created_at as co_created_at
+		from board_comment a 
+		left join board_comment b on a.comment_id = b.parent_comment_id
+		where a.board_id = #{value}
+	</select>
+	<select id="selectPopularBoardList" resultType="BoardVO" parameterType="BoardVO">
+		select *
+    	from (
+        select a.*
+        ,(select count(board_like_id) from board_like where board_id = a.board_id) as boardLikeCount
+        , d.category_name
+        from board a 
+        left join board_like b 
+           on a.board_id = b.board_id
+        left join board_master c 
+           on a.board_master_id = c.board_master_id
+		left join board_category d 
+		   on c.category_id = d.category_id
+		inner join member m
+	       on a.user_id = m.mem_id
+	    inner join apartment ap
+	       on ap.apart_complexcode = m.apart_complexcode
+	    where 1 = 1   
+	    <if test ='boardMasterId != null'>
+			and  a.board_master_id = #{boardMasterId}
+        
+		</if>
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(apartCode)" >
+		    and m.apart_complexcode = #{apartCode}
+		</if>
+        group by
+        a.board_id,
+        a.board_master_id,
+        a.board_content_id,
+        a.content,
+        a.view_count,
+        a.title,
+        a.created_at,
+        a.updated_at,
+        a.user_id,
+        d.category_name
+        order by
+        boardLikeCount desc
+        )
+    where rownum <![CDATA[<=]]> 5
+	</select>
+	<select id="selectBoardTotalCount" resultType="int" parameterType="int">
+        select count(*)
+        from board
+		<choose>
+		 <when test ='value != null'>
+			where board_master_id = #{value}
+		</when>
+		<otherwise>
+			where 1=1
+		</otherwise>
+	</choose>
+    </select>
+    
+    <update id="updateBoard" parameterType="BoardVO">
+		update board
+		set title = #{title, jdbcType=VARCHAR},
+			content = #{content},
+			board_master_id = #{categoryId},
+			updated_at = SYSDATE
+		WHERE board_id = #{boardId}
+	</update>
+
+	<delete id="deleteBoard" parameterType="int">
+		DELETE FROM board
+		WHERE board_id = #{boardId}
+	</delete>
+	
+    <insert id="insertComment" parameterType="CommentVO">
+    insert into board_comment(parent_comment_id, board_id, user_id, content, created_at, updated_at)
+    values(#{parentCommentId}, #{boardId}, #{userId}, #{content}, SYSDATE, null)
+    </insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

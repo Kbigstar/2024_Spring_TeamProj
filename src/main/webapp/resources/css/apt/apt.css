@@ -1,0 +1,22 @@
+body {
+	padding-top : 100px;
+	background-color : black;
+}
+.text_box {
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  font-size: 3rem;
+}
+.apt_text {
+    
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  font-size: 2rem;
+  
+}
+.elec{
+    height: 10px; 
+}

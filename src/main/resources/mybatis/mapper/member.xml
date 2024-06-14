@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecoplanner.my.member.dao.IMemberDAO">
+	<select id="loginMember" parameterType="MemberVO"
+		resultType="MemberVO">
+		SELECT mem_id
+		, mem_pw
+		, mem_nm
+		, mem_phone
+		, mem_res
+		,
+		a.apart_complexcode AS apart_complexcode
+		, a.elec_usage AS elec_usage
+		,
+		b.apart_district
+		, b.apart_neighborhood
+		, b.apart_buildingnm
+		FROM member
+		a
+		, apartment b
+		WHERE mem_id = #{memId}
+		AND a.apart_complexcode =
+		b.apart_complexcode
+	</select>
+
+	<insert id="registMember" parameterType="MemberVO">
+		INSERT INTO member
+		(mem_id, mem_pw, mem_nm, mem_res, mem_phone
+		,apart_complexcode)
+		VALUES
+		(#{memId}, #{memPw}, #{memNm}, #{memRes}, #{memPhone},
+		#{apartComplexcode})
+	</insert>
+
+	<select id="getAptList" parameterType="AptVO" resultType="AptVO">
+		SELECT
+		apart_province, apart_district, apart_neighborhood, apart_buildingnm,
+		apart_complexcode
+		FROM apartment
+		WHERE APART_BUILDINGNM LIKE '%' ||
+		#{apartBuildingnm} || '%'
+
+	</select>
+
+	<update id="updateMember" parameterType="MemberVO">
+		UPDATE member
+		SET mem_nm 	= #{memNm},
+		mem_res = #{memRes},
+		mem_phone = #{memPhone},
+		apart_complexcode = #{apartComplexcode}
+		WHERE mem_id = #{memId}
+	</update>
+
+	<update id="updatePw" parameterType="MemberVO">
+		UPDATE member
+		SET mem_pw =
+		#{memPw}
+		WHERE mem_id = #{memId}
+	</update>
+	
+	<update id="updateSearchPw" parameterType="MemberVO">
+		UPDATE member
+		SET mem_pw =
+		#{memPw}
+		WHERE mem_id = #{memId}
+	</update>
+
+
+
+	<select id="certifiedMember" parameterType="MemberVO"
+		resultType="MemberVO">
+		SELECT mem_id
+		FROM member
+		WHERE mem_id = #{memId}
+		AND
+		mem_phone = #{memPhone}
+	</select>
+
+
+
+	<select id="findMember" parameterType="MemberVO"
+		resultType="MemberVO">
+		SELECT mem_id
+		FROM member
+		WHERE mem_nm = #{memNm}
+		AND
+		mem_phone = #{memPhone}
+	</select>
+
+	<!-- 비밀번호 찾기 -->
+	<select id="emailMember" parameterType="MemberVO"
+		resultType="MemberVO">
+		SELECT mem_id
+		FROM member
+		WHERE mem_id = #{memId}
+	</select>
+
+	<select id="phoneMember" parameterType="MemberVO"
+		resultType="MemberVO">
+		SELECT mem_phone
+		FROM member
+		WHERE mem_phone = #{memPhone}
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecoplanner.my.news.dao.INewsDAO">
+	
+	
+	
+	<select id="getnews" resultType="NewsVO" parameterType="NewsSearchVO">
+
+		SELECT *
+		FROM (
+		    SELECT rownum as rnum
+		           ,A1.*
+		    FROM (
+		         SELECT  news_no
+		               , news_title
+		               , news_link
+		               , TO_CHAR(news_dt, 'YYYY/MM/dd') AS news_dt
+		               , news_views
+		         FROM news
+		         WHERE 1=1
+		         <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)" >
+		         	AND news_title LIKE '%'||#{searchWord}||'%'
+		         </if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchScrap)">
+				   AND news_no IN (
+				       SELECT news_number
+				       FROM scrap_news
+				       WHERE mem_id = #{searchScrap}
+				   )
+				</if>
+	
+		         <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(sort)" >
+		         	ORDER BY
+		         	<choose>
+						  <when test='sort=="news_no"'>
+						   	news_no
+						  </when>
+						  <when test='sort=="news_views"'>
+			              	news_views
+			              </when>
+			         </choose>
+			         DESC			             
+		         </if>
+		         <if test="@org.apache.commons.lang3.StringUtils@isBlank(sort)" >
+		         	ORDER BY news_no desc
+		         </if>
+		
+		    ) A1
+		)
+		WHERE rnum BETWEEN #{firstRow} AND #{lastRow}
+	</select>
+	<update id="updateNewsViews" parameterType="NewsVO">
+		UPDATE news
+		SET
+		news_views = news_views + 1
+		WHERE news_no = #{newsNo}
+	</update>
+	<select id="getTotalRowCount" parameterType="NewsVO"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM news
+	    WHERE 1=1
+         <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)" >
+         	AND news_title LIKE '%'||#{searchWord}||'%'
+         </if>
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchScrap)">
+		   AND news_no IN (
+		       SELECT news_number
+		       FROM scrap_news
+		       WHERE mem_id = #{searchScrap}
+		   )
+		</if>
+	</select>
+	<insert id="scrapNews" parameterType="NewsVO">
+		insert into scrap_news( mem_id ,news_number ,scrap_number  )
+		values(#{memId},#{newsNo},scrap_seq.nextval )
+	</insert>
+	<update id="deleteScrap" parameterType="NewsVO">
+	update scrap_news 
+	set scrap_yn = 'Y'
+	where mem_id = #{memId}
+	and news_number= #{newsNo}
+	</update>
+	<select id="scrapSelect" parameterType="NewsVO"
+		resultType="NewsVO">
+	select news_number as news_no, mem_id, scrap_yn,scrap_number
+	from scrap_news
+	where mem_id = #{memId}
+	AND scrap_yn = 'N'	
+	</select>
+</mapper>
+	
