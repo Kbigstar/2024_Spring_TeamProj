@@ -50,7 +50,7 @@ https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/a4687ba8-a886-4
 ## 내 아파트
 https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/273c89dc-cba2-42e5-be57-3b461f3b66e8
 
-- **여기에서 이미지파일을 Flask 서버에 전송하려 이미지 OCR 처리**
+- **여기에서 이미지파일을 Flask 서버에 전송하여 이미지 OCR 처리**
 <br>
 <hr>
 <br>
