@@ -41,7 +41,43 @@
 
 
 ## 메인화면
-![메인화면](https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/5ddc1571-64f2-4194-b51c-c8b5d3e3947d)
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/a4687ba8-a886-41f8-81f5-59dc25fc64d7
+
+## 내 아파트
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/273c89dc-cba2-42e5-be57-3b461f3b66e8
+
+## 아파트 별 비교
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/c36b6fd9-1b74-4e4e-8f9f-d4e092a0536b
+
+## 고지서 분석
+![AptBill](https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/cdb180ee-001f-470c-abec-a475606fdf47)
+
+## 목표치
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/f23fbd8e-e984-42d5-a225-4416abe0d3e1
+
+## 아파트 별 게시판
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/106e6f43-e18b-4b35-8f7a-c018a8af2eb4
+
+## 탄소 중립 포인트제
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/504d744a-10cc-41c5-ad12-684a0f3e72d3
+
+## 에너지 뉴스
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/4b15a843-08b7-4e53-952d-1759b6dfcd50
+
+## 회원가입 및 계정 찾기
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/96019d24-7ab6-47bd-b3e4-4f65430707c3
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/3b4cc6c7-a958-4691-ab81-88e1a1c838f8
+
+
+
+
+
+
+
+
+
+
+
 
 
 
