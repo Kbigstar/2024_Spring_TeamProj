@@ -41,6 +41,7 @@
 
 
 ## 메인화면
-https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/5ddc1571-64f2-4194-b51c-c8b5d3e3947d
+![메인화면](https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/5ddc1571-64f2-4194-b51c-c8b5d3e3947d)
+
 
 
