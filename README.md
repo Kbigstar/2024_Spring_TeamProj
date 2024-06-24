@@ -66,6 +66,7 @@ https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/4b15a843-08b7-4
 
 ## 회원가입 및 계정 찾기
 https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/96019d24-7ab6-47bd-b3e4-4f65430707c3
+
 https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/3b4cc6c7-a958-4691-ab81-88e1a1c838f8
 
 
