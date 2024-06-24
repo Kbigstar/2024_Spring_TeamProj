@@ -41,4 +41,6 @@
 
 
 ## 메인화면
-![이슈 이미지](https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/6dcb9855-49b5-4ac8-a097-e6207c3629e1)
+https://github.com/Kbigstar/2024_Spring_TeamProj/assets/93638178/5ddc1571-64f2-4194-b51c-c8b5d3e3947d
+
+
